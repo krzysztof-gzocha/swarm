@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        order: start-first
+    depends_on:
+      - traefik
+    ports:
+      - "53/tcp"
+      - "53/udp"
+      - "80/tcp"
+    environment:
+      TZ: 'Europe/Warsaw'
+      DNSSEC: "true"
+      DNS1: "127.0.0.1"
+      DNS2: "1.1.1.1"
+      WEBPASSWORD: 'passw0rd' # access to admin panel will be covered by Traefik
+    volumes:
+      - piHoleConfig:/etc/pihole/
+      - piHoleDnsMasq:/etc/dnsmasq.d/
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-pihole.entrypoints=https"
+      - "traefik.http.routers.safe-pihole.tls=true"
+      - "traefik.http.routers.safe-pihole.rule=Host(`pihole.localhost`)"
+      - "traefik.http.routers.safe-pihole.middlewares=secured@file,add-admin@docker"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.add-admin.addprefix.prefix=/admin"
+      - "traefik.http.routers.unsafe-pihole.entrypoints=http"
+      - "traefik.http.routers.unsafe-pihole.tls=false"
+      - "traefik.http.routers.unsafe-pihole.rule=Host(`pihole.localhost`)"
+      - "traefik.http.routers.unsafe-pihole.middlewares=redirect-to-https@file"
+      - "traefik.tcp.routers.piholetcp.entrypoints=dns53tcp"
+      - "traefik.tcp.routers.piholetcp.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.piholetcp.service=pihole"
+      - "traefik.tcp.services.pihole.loadbalancer.server.port=53"
+      - "traefik.udp.routers.piholeudp2.entrypoints=dns53udp"
+      - "traefik.udp.routers.piholeudp2.service=pihole"
+      - "traefik.udp.services.pihole.loadbalancer.server.port=53"
+    networks:
+      - traefik-public
+  #     Recommended but not required (DHCP needs NET_ADMIN)
+  #       https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+  #    cap_add:
+  #      - NET_ADMIN

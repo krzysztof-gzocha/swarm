@@ -3,6 +3,8 @@ entryPoints:
     address: ":443"
   http:
     address: ":80"
+  metrics:
+    address: ":8082"
   dns53tcp:
     address: ":53/tcp"
   dns53udp:
@@ -25,7 +27,8 @@ metrics:
   prometheus:
     addEntryPointsLabels: true
     addServicesLabels: true
-    manualRouting: true
+    manualRouting: false
+    entryPoint: metrics
 
 log: {}
 

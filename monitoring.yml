@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.20.1
+    container_name: prometheus
+    restart: on-failure
+    ports:
+      - "9090"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik-public # only to scrape Traefik metrics as well
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheusData:/prometheus
+    labels:
+      # No need to access Prometheus from outside world,
+      # but if required change and ucomment all labels
+      - "traefik.enable=false"
+#      - "traefik.http.routers.safe-prometheus.entrypoints=https"
+#      - "traefik.http.routers.safe-prometheus.tls=true"
+#      - "traefik.http.routers.safe-prometheus.rule=Host(`prometheus.localhost`)"
+#      - "traefik.http.routers.safe-prometheus.middlewares=secured@file"
+#      - "traefik.http.routers.unsafe-prometheus.tls=false"
+#      - "traefik.http.routers.unsafe-prometheus.entrypoints=http"
+#      - "traefik.http.routers.unsafe-prometheus.middlewares=redirect-to-https@file,small-rate-limit@file"
+#      - "traefik.http.routers.unsafe-prometheus.rule=Host(`prometheus.localhost`)"
+
+# Configure prometheus (http://prometheus:9090) as datastore
+  grafana:
+    image: grafana/grafana:7.1.5
+    container_name: grafana
+    restart: on-failure
+    ports:
+      - "3000"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik-public
+    volumes:
+      - grafana:/etc/grafana
+      - grafanaPlugins:/var/lib/plugins
+    environment:
+      - "GF_INSTALL_PLUGINS=grafana-piechart-panel"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-grafana.entrypoints=https"
+      - "traefik.http.routers.safe-grafana.tls=true"
+      - "traefik.http.routers.safe-grafana.rule=Host(`grafana.localhost`)"
+      - "traefik.http.routers.safe-grafana.middlewares=secured@file"
+      - "traefik.http.routers.unsafe-grafana.tls=false"
+      - "traefik.http.routers.unsafe-grafana.entrypoints=http"
+      - "traefik.http.routers.unsafe-grafana.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-grafana.rule=Host(`grafana.localhost`)"
+
+
+volumes:
+  prometheusData:
+  grafana:
+  grafanaPlugins:
