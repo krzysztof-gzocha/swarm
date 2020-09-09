@@ -7,9 +7,6 @@ entryPoints:
     address: ":53/tcp"
   dns53udp:
     address: ":53/udp"
-  dns67udp:
-    address: ":67/udp"
-
 
 global:
   checkNewVersion: true
@@ -26,11 +23,11 @@ providers:
 
 metrics:
   prometheus:
+    addEntryPointsLabels: true
+    addServicesLabels: true
     manualRouting: true
 
 log: {}
-
-accessLog: {}
 
 api:
   dashboard: true

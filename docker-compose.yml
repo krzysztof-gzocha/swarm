@@ -12,9 +12,8 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 53:53/tcp # already taken?
+      - 53:53
       - 53:53/udp
-      - 67:67/udp
     deploy:
       placement:
         constraints:
@@ -68,7 +67,7 @@ services:
       - "traefik.http.routers.safe-whoami.middlewares=secured@file"
       - "traefik.http.routers.unsafe-whoami.tls=false"
       - "traefik.http.routers.unsafe-whoami.entrypoints=http"
-      - "traefik.http.routers.unsafe-whoami.middlewares=redirect-to-https@file"
+      - "traefik.http.routers.unsafe-whoami.middlewares=redirect-to-https@file,small-rate-limit@file"
       - "traefik.http.routers.unsafe-whoami.rule=Host(`whoami.localhost`)"
     networks:
       - traefik-public
@@ -76,43 +75,48 @@ services:
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        order: start-first
     depends_on:
       - traefik
     ports:
-      - "80/tcp"
       - "53/tcp"
       - "53/udp"
-      - "67/udp"
-      - "443/tcp"
+      - "80/tcp"
     environment:
       TZ: 'Europe/Warsaw'
       DNSSEC: "true"
       DNS1: "127.0.0.1"
       DNS2: "1.1.1.1"
-      WEBPASSWORD: 'changeThis' # use docker secrets for that
-#    volumes:
-#      - './etc-pihole/:/etc/pihole/'
-#      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+      WEBPASSWORD: 'changeThis'
+    volumes:
+      - piHoleConfig:/etc/pihole/
+      - piHoleDnsMasq:/etc/dnsmasq.d/
     restart: on-failure
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.safe-pihole.entrypoints=https"
       - "traefik.http.routers.safe-pihole.tls=true"
       - "traefik.http.routers.safe-pihole.rule=Host(`pihole.localhost`)"
-      - "traefik.http.routers.safe-pihole.middlewares=secured@file"
+      - "traefik.http.routers.safe-pihole.middlewares=secured@file,add-admin@docker"
       - "traefik.http.services.safe-pihole.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.add-admin.addprefix.prefix=/admin"
+      - "traefik.http.routers.unsafe-pihole.entrypoints=http"
+      - "traefik.http.routers.unsafe-pihole.tls=false"
+      - "traefik.http.routers.unsafe-pihole.rule=Host(`pihole.localhost`)"
+      - "traefik.http.routers.unsafe-pihole.middlewares=redirect-to-https@file"
       - "traefik.tcp.routers.piholetcp.entrypoints=dns53tcp"
       - "traefik.tcp.routers.piholetcp.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.piholetcp.service=pihole"
       - "traefik.tcp.services.pihole.loadbalancer.server.port=53"
-      - "traefik.udp.routers.piholeudp.entrypoints=dns67udp"
-      - "traefik.udp.routers.piholeudp.service=pihole2"
-      - "traefik.udp.services.pihole2.loadbalancer.server.port=67"
       - "traefik.udp.routers.piholeudp2.entrypoints=dns53udp"
       - "traefik.udp.routers.piholeudp2.service=pihole"
       - "traefik.udp.services.pihole.loadbalancer.server.port=53"
-#      - "traefik.udp.services.myudpservice.loadbalancer.server.port=423"
-#      - "traefik.tcp.services.pihole-dns53.loadbalancer.server.port=53"
     networks:
       - traefik-public
 #     Recommended but not required (DHCP needs NET_ADMIN)
@@ -125,3 +129,7 @@ networks:
   # services that need to be publicly available via this Traefik
   traefik-public:
     external: true
+
+volumes:
+  piHoleConfig:
+  piHoleDnsMasq:
