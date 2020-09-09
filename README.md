@@ -24,7 +24,6 @@ load to other services based on Host or other rules
 - [ ] Add NAS/MediaServer container in separate docker-compose.yml
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
 - [ ] Add [ZoneMinder](https://github.com/ZoneMinder/ZoneMinder) as video surveillance center 
-- [ ] Add [WatchTower](https://containrrr.dev/watchtower/) to automatically update all the containers if their image is changed
 - [ ] Add [Mosquitto](https://hub.docker.com/_/eclipse-mosquitto) as MQTT broker
 - [ ] Add [NextCloud](https://hub.docker.com/_/nextcloud) as file sharing center
 - [ ] Test on actual Docker swarm with multiple nodes
