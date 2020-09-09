@@ -15,13 +15,12 @@ load to other services based on Host or other rules
 
 # To do
 - [x] Add Pi Hole as DNS and admin web panel
+- [x] Add Prometheus and configure it to scrape metrics from Traefik and Docker containers
+- [x] Add Grafana and configure it to read from Prometheus
+- [x] Move Prometheus, Graphana and exporters into separate docker-compose file, so user can decide if he wants to run them
 - [ ] Add DockerExporter/Swarmpit/anything that can present docker swarm metrics for Prometheus
-- [ ] Add Prometheus and configure it to scrape metrics from Traefik and Docker containers
-- [ ] Add Grafana and configure it to read from Prometheus
-- [ ] Move Prometheus, Graphana and exporters into separate docker-compose file, so user can decide if he wants to run them
 - [ ] Basic security configuration for each and every docker
 - [ ] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server and make sure it will run on every node in HA mode
-- [ ] Add NAS/MediaServer container in separate docker-compose.yml
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
 - [ ] Add [ZoneMinder](https://github.com/ZoneMinder/ZoneMinder) as video surveillance center 
 - [ ] Add [Mosquitto](https://hub.docker.com/_/eclipse-mosquitto) as MQTT broker
