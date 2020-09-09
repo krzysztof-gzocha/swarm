@@ -1,0 +1,127 @@
+version: '3.8'
+
+services:
+
+  traefik:
+    # Use the latest v2.2.x Traefik image available
+    image: traefik:v2.3
+    container_name: traefik
+    restart: on-failure
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 80:80
+      - 443:443
+      - 53:53/tcp # already taken?
+      - 53:53/udp
+      - 67:67/udp
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-dashboard.entrypoints=https"
+      - "traefik.http.routers.safe-dashboard.tls=true"
+      - "traefik.http.routers.safe-dashboard.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.safe-dashboard.service=api@internal"
+      - "traefik.http.routers.safe-dashboard.middlewares=secured@file"
+      - "traefik.http.routers.safe-metrics.entrypoints=https"
+      - "traefik.http.routers.safe-metrics.tls=true"
+      - "traefik.http.routers.safe-metrics.rule=Host(`traefik.localhost`) && PathPrefix(`/metrics`)"
+      - "traefik.http.routers.safe-metrics.service=prometheus@internal"
+      - "traefik.http.routers.safe-metrics.middlewares=secured@file"
+      - "traefik.http.routers.unsafe-dashboard.tls=false"
+      - "traefik.http.routers.unsafe-dashboard.entrypoints=http"
+      - "traefik.http.routers.unsafe-dashboard.middlewares=redirect-to-https@file"
+      - "traefik.http.routers.unsafe-dashboard.rule=Host(`traefik.localhost`)"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/certificates:ro
+      - ./config:/configuration:ro
+    command:
+      - --configFile=/configuration/traefik.yml
+    networks:
+      # Use the public network created to be shared between Traefik and
+      # any other service that needs to be publicly available with HTTPS
+      - traefik-public
+
+  whoami:
+    container_name: whoami
+    image: containous/whoami
+    depends_on:
+      - traefik
+    restart: on-failure
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "80/tcp"
+    deploy:
+      mode: global # exactly 1 container per swarm node
+      update_config:
+        order: start-first
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-whoami.entrypoints=https"
+      - "traefik.http.routers.safe-whoami.tls=true"
+      - "traefik.http.routers.safe-whoami.rule=Host(`whoami.localhost`)"
+      - "traefik.http.routers.safe-whoami.middlewares=secured@file"
+      - "traefik.http.routers.unsafe-whoami.tls=false"
+      - "traefik.http.routers.unsafe-whoami.entrypoints=http"
+      - "traefik.http.routers.unsafe-whoami.middlewares=redirect-to-https@file"
+      - "traefik.http.routers.unsafe-whoami.rule=Host(`whoami.localhost`)"
+    networks:
+      - traefik-public
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    depends_on:
+      - traefik
+    ports:
+      - "80/tcp"
+      - "53/tcp"
+      - "53/udp"
+      - "67/udp"
+      - "443/tcp"
+    environment:
+      TZ: 'Europe/Warsaw'
+      DNSSEC: "true"
+      DNS1: "127.0.0.1"
+      DNS2: "1.1.1.1"
+      WEBPASSWORD: 'changeThis' # use docker secrets for that
+#    volumes:
+#      - './etc-pihole/:/etc/pihole/'
+#      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-pihole.entrypoints=https"
+      - "traefik.http.routers.safe-pihole.tls=true"
+      - "traefik.http.routers.safe-pihole.rule=Host(`pihole.localhost`)"
+      - "traefik.http.routers.safe-pihole.middlewares=secured@file"
+      - "traefik.http.services.safe-pihole.loadbalancer.server.port=80"
+      - "traefik.tcp.routers.piholetcp.entrypoints=dns53tcp"
+      - "traefik.tcp.routers.piholetcp.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.piholetcp.service=pihole"
+      - "traefik.tcp.services.pihole.loadbalancer.server.port=53"
+      - "traefik.udp.routers.piholeudp.entrypoints=dns67udp"
+      - "traefik.udp.routers.piholeudp.service=pihole2"
+      - "traefik.udp.services.pihole2.loadbalancer.server.port=67"
+      - "traefik.udp.routers.piholeudp2.entrypoints=dns53udp"
+      - "traefik.udp.routers.piholeudp2.service=pihole"
+      - "traefik.udp.services.pihole.loadbalancer.server.port=53"
+#      - "traefik.udp.services.myudpservice.loadbalancer.server.port=423"
+#      - "traefik.tcp.services.pihole-dns53.loadbalancer.server.port=53"
+    networks:
+      - traefik-public
+#     Recommended but not required (DHCP needs NET_ADMIN)
+#       https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+#    cap_add:
+#      - NET_ADMIN
+
+networks:
+  # Use the previously created public network "traefik-public", shared with other
+  # services that need to be publicly available via this Traefik
+  traefik-public:
+    external: true

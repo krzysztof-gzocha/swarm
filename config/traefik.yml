@@ -1,0 +1,59 @@
+entryPoints:
+  https:
+    address: ":443"
+  http:
+    address: ":80"
+  dns53tcp:
+    address: ":53/tcp"
+  dns53udp:
+    address: ":53/udp"
+  dns67udp:
+    address: ":67/udp"
+
+
+global:
+  checkNewVersion: true
+
+providers:
+  file:
+    watch: true
+    directory: /configuration/services
+  docker:
+    watch: true
+    defaultRule: "Host(`{{ normalize .Name }}.docker.localhost`)"#
+    network: traefik-public
+    exposedByDefault: false
+
+metrics:
+  prometheus:
+    manualRouting: true
+
+log: {}
+
+accessLog: {}
+
+api:
+  dashboard: true
+
+serversTransport:
+  insecureSkipVerify: true
+  rootCAs:
+    - /certificates/ca.crt
+
+tls:
+  certificates:
+    - certFile: /certificates/ca.crt
+      keyFile: /certificates/ca.key
+
+  options:
+    default:
+      sniStrict: false
+
+  default:
+    minVersion: VersionTLS13
+
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /certificates/cert.crt
+        keyFile: /certificates/cert.key

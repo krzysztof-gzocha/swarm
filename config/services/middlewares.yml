@@ -1,0 +1,47 @@
+http:
+  middlewares:
+
+    secured:
+      chain:
+        middlewares:
+          - internal-network
+          - small-rate-limit
+          - redirect-to-https
+          - auth-users
+          - security-headers
+
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+        port: 443
+
+    internal-network:
+      ipWhiteList:
+        sourceRange:
+          - "127.0.0.1/24" # localhost
+          - "172.0.0.1/8" # all docker containers
+#          - "192.168.0.1/16" # some another local network. uncomment when required
+
+    small-rate-limit:
+      rateLimit:
+        average: 10
+        burst: 10
+
+    big-rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+
+    auth-users:
+      basicAuth:
+        removeHeader: true
+        realm: basic
+        usersFile: "/configuration/users"
+
+    security-headers:
+      headers:
+        frameDeny: true
+        sslRedirect: true
+        contentTypeNosniff: true
+        browserXssFilter: true
