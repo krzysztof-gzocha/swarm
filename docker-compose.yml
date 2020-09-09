@@ -93,7 +93,7 @@ services:
       DNSSEC: "true"
       DNS1: "127.0.0.1"
       DNS2: "1.1.1.1"
-      WEBPASSWORD: 'changeThis'
+      WEBPASSWORD: 'admin' # access to admin panel will be covered by Traefik
     volumes:
       - piHoleConfig:/etc/pihole/
       - piHoleDnsMasq:/etc/dnsmasq.d/

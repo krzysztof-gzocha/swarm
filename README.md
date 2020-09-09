@@ -7,11 +7,26 @@ Docker swarm setup with basic applications.
  - Docker compose
 - Generate certificates (read certs/README.md for that)
 - Prepare users list in `users` file
-- Update `WEBPASSWORD` for PiHole in docker-compose.yml 
 - Run `docker-compose up`
-- Visit https://traefik.localhost/dashboard/
+- PiHole admin panel password is "admin", but that does not matter that much as Traefik will restrict access only by users you've mentioned in `users` file
+- Visit https://traefik.localhost/dashboard/ or https://pihole.localhost/
 - Configure your router to point to Traefik, which will then distribute the request 
 load to other services based on Host or other rules
+
+# To do
+- [x] Add Pi Hole as DNS and admin web panel
+- [ ] Add DockerExporter/Swarmpit/anything that can present docker swarm metrics for Prometheus
+- [ ] Add Prometheus and configure it to scrape metrics from Traefik and Docker containers
+- [ ] Add Grafana and configure it to read from Prometheus
+- [ ] Move Prometheus, Graphana and exporters into separate docker-compose file, so user can decide if he wants to run them
+- [ ] Basic security configuration for each and every docker
+- [ ] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server and make sure it will run on every node in HA mode
+- [ ] Add *reasonable* resource limits in `deploy` key for each of the services
+- [ ] Add NAS/MediaServer container in separate docker-compose.yml
+- [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
+- [ ] Add [WatchTower](https://containrrr.dev/watchtower/) to automatically update all the containers if their image is changed
+- [ ] Test on actual Docker swarm with multiple nodes
+- [ ] Write README about how to deploy new versions of any service
 
 # Common issues
 ### Port 53 is already taken
