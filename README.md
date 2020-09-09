@@ -21,12 +21,17 @@ load to other services based on Host or other rules
 - [ ] Move Prometheus, Graphana and exporters into separate docker-compose file, so user can decide if he wants to run them
 - [ ] Basic security configuration for each and every docker
 - [ ] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server and make sure it will run on every node in HA mode
-- [ ] Add *reasonable* resource limits in `deploy` key for each of the services
 - [ ] Add NAS/MediaServer container in separate docker-compose.yml
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
+- [ ] Add [ZoneMinder](https://github.com/ZoneMinder/ZoneMinder) as video surveillance center 
 - [ ] Add [WatchTower](https://containrrr.dev/watchtower/) to automatically update all the containers if their image is changed
+- [ ] Add [Mosquitto](https://hub.docker.com/_/eclipse-mosquitto) as MQTT broker
+- [ ] Add [NextCloud](https://hub.docker.com/_/nextcloud) as file sharing center
 - [ ] Test on actual Docker swarm with multiple nodes
-- [ ] Write README about how to deploy new versions of any service
+- [ ] Benchmark the hardware requirements with full setup using metrics from Prometheus
+- [ ] Write README about how to deploy new versions of any service\
+
+Yea.. that's a lot of todos..
 
 # Common issues
 ### Port 53 is already taken
