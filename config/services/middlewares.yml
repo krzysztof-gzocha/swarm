@@ -1,12 +1,20 @@
 http:
   middlewares:
 
+    authelia:
+      forwardAuth:
+        address: "http://authelia:9091/api/verify?rd=https://login.localhost/"
+        trustForwardHeader: true
+        authResponseHeaders:
+          - "Remote-User"
+          - "Remote-Groups"
+
     secured:
       chain:
         middlewares:
           - internal-network
           - redirect-to-https
-          - auth-users
+          - auth-traefik.users
           - security-headers
 
     redirect-to-https:
@@ -35,7 +43,7 @@ http:
       basicAuth:
         removeHeader: true
         realm: basic
-        usersFile: "/configuration/users"
+        usersFile: "/configuration/traefik.users"
 
     security-headers:
       headers:

@@ -1,0 +1,20 @@
+# https://www.authelia.com/docs/configuration/authentication/file.html#password-hash-algorithm-tuning
+# Use this to generate passwords:
+#    docker run authelia/authelia:latest authelia hash-password yourpassword
+users:
+  admin:
+    displayname: "Admin"
+    # password is admin
+    password: "$argon2id$v=19$m=1048576,t=1,p=8$K3VCVWFzQU9xeTNGM0ZQZw$f2QVFbXG45vxgZFqzM3SCyMPBJl2vxhHxmEKrISDDBQ"
+    email: admin@localhost
+    groups:
+      - admins
+      - dev
+
+  guest:
+    displayname: "Guest"
+    # password is guest
+    password: "$argon2id$v=19$m=1048576,t=1,p=8$TzEzS0VsY2ZGYnZYUjk5cg$f5nTV83uUaXpEDa3QHzBE8JkNRR7HdjQvaZRvKXDrko"
+    email: guest@localhost
+    groups:
+      - guest

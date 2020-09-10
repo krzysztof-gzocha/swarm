@@ -1,0 +1,50 @@
+version: '3.8'
+
+secrets:
+  jwt:
+    file: ./config/secrets/jwt
+  session:
+    file: ./config/secrets/session
+
+services:
+  authelia:
+    image: authelia/authelia:4.21.0
+    container_name: authelia
+    restart: unless-stopped
+    ports:
+      - "9091"
+    depends_on:
+      - traefik
+    volumes:
+      - ./config/authelia.users.yml:/config/authelia.users.yml
+      - ./certs/ca.crt:/config/ssl/cert.pem
+      - ./certs/ca.key:/config/ssl/key.pem
+      - autheliaDb:/config/db/
+    networks:
+      - traefik-public
+    deploy:
+      mode: replicated
+      replicas: 1
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.authelia.rule=Host(`login.${SWARM_HOST}`)'
+      - 'traefik.http.routers.authelia.entrypoints=https'
+      - 'traefik.http.routers.authelia.tls=true'
+      - 'traefik.http.routers.authelia.middlewares=secured@file,authelia@file'
+      - 'traefik.http.routers.unsafe-authelia.rule=Host(`login.${SWARM_HOST}`)'
+      - 'traefik.http.routers.unsafe-authelia.entrypoints=http'
+      - 'traefik.http.routers.unsafe-authelia.tls=false'
+      - 'traefik.http.routers.unsafe-authelia.middlewares=redirect-to-https@file,small-rate-limit@file'
+#      - 'traefik.http.middlewares.authelia.forwardauth.address=https://authelia:9091/api/verify?rd=https://login.${SWARM_HOST}/'
+#      - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
+#      - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User, Remote-Groups'
+    environment:
+      - "TZ=${SWARM_TZ}"
+      - "AUTHELIA_JWT_SECRET_FILE=/run/secrets/jwt"
+      - "AUTHELIA_SESSION_SECRET_FILE=/run/secrets/session"
+    secrets:
+      - jwt
+      - session
+
+volumes:
+  autheliaDb:
