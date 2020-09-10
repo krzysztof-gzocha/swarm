@@ -14,6 +14,7 @@ services:
       - no-new-privileges:true
     networks:
       - traefik-public # only to scrape Traefik metrics as well
+      - monitoring
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheusData:/prometheus
@@ -30,7 +31,6 @@ services:
 #      - "traefik.http.routers.unsafe-prometheus.middlewares=redirect-to-https@file,small-rate-limit@file"
 #      - "traefik.http.routers.unsafe-prometheus.rule=Host(`prometheus.${SWARM_HOST}`)"
 
-# Configure prometheus (http://prometheus:9090) as datastore
   grafana:
     image: grafana/grafana:7.1.5
     container_name: grafana
@@ -64,6 +64,29 @@ services:
       - "traefik.http.routers.unsafe-grafana.middlewares=redirect-to-https@file,small-rate-limit@file"
       - "traefik.http.routers.unsafe-grafana.rule=Host(`grafana.${SWARM_HOST}`)"
 
+  docker_exporter:
+    image: prometheusnet/docker_exporter
+    restart: on-failure
+    container_name: docker_exporter
+    ports:
+      - "9417"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  monitoring:
 
 volumes:
   prometheusData:

@@ -5,6 +5,7 @@ Docker swarm setup with basic applications.
 - Install all required apps:
  - Docker
  - Docker compose
+- `docker network create --driver=overlay traefik-public`
 - Generate certificates (read certs/README.md for that)
 - Prepare users list in `users` file
 - Run `docker-compose -f traefik.yml -f pihole.yml -f monitoring.yml up` to get all services running
