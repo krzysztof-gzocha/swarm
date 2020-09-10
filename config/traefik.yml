@@ -19,7 +19,6 @@ providers:
     directory: /configuration/services
   docker:
     watch: true
-    defaultRule: "Host(`{{ normalize .Name }}.docker.localhost`)"#
     network: traefik-public
     exposedByDefault: false
 

@@ -22,7 +22,7 @@ load to other services based on Host or other rules
 - [ ] Basic security configuration for each and every docker
 - [ ] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server and make sure it will run on every node in HA mode
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
-- [ ] Add [ZoneMinder](https://github.com/ZoneMinder/ZoneMinder) as video surveillance center 
+- [ ] Add [Shinobi](https://hub.docker.com/r/shinobisystems/shinobi) as video surveillance center 
 - [ ] Add [Mosquitto](https://hub.docker.com/_/eclipse-mosquitto) as MQTT broker
 - [ ] Add [NextCloud](https://hub.docker.com/_/nextcloud) as file sharing center
 - [ ] Test on actual Docker swarm with multiple nodes

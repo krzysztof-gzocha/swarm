@@ -5,6 +5,9 @@ services:
     image: prom/prometheus:v2.20.1
     container_name: prometheus
     restart: on-failure
+    deploy:
+      mode: replicated
+      replicas: 1
     ports:
       - "9090"
     security_opt:
@@ -20,12 +23,12 @@ services:
       - "traefik.enable=false"
 #      - "traefik.http.routers.safe-prometheus.entrypoints=https"
 #      - "traefik.http.routers.safe-prometheus.tls=true"
-#      - "traefik.http.routers.safe-prometheus.rule=Host(`prometheus.localhost`)"
+#      - "traefik.http.routers.safe-prometheus.rule=Host(`prometheus.${SWARM_HOST}`)"
 #      - "traefik.http.routers.safe-prometheus.middlewares=secured@file"
 #      - "traefik.http.routers.unsafe-prometheus.tls=false"
 #      - "traefik.http.routers.unsafe-prometheus.entrypoints=http"
 #      - "traefik.http.routers.unsafe-prometheus.middlewares=redirect-to-https@file,small-rate-limit@file"
-#      - "traefik.http.routers.unsafe-prometheus.rule=Host(`prometheus.localhost`)"
+#      - "traefik.http.routers.unsafe-prometheus.rule=Host(`prometheus.${SWARM_HOST}`)"
 
 # Configure prometheus (http://prometheus:9090) as datastore
   grafana:
@@ -43,16 +46,23 @@ services:
       - grafanaPlugins:/var/lib/plugins
     environment:
       - "GF_INSTALL_PLUGINS=grafana-piechart-panel"
+      - "TZ=${SWARM_TZ}"
+    depends_on:
+      - prometheus
+      - traefik
+    deploy:
+      mode: replicated
+      replicas: 1
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.safe-grafana.entrypoints=https"
       - "traefik.http.routers.safe-grafana.tls=true"
-      - "traefik.http.routers.safe-grafana.rule=Host(`grafana.localhost`)"
+      - "traefik.http.routers.safe-grafana.rule=Host(`grafana.${SWARM_HOST}`)"
       - "traefik.http.routers.safe-grafana.middlewares=secured@file"
       - "traefik.http.routers.unsafe-grafana.tls=false"
       - "traefik.http.routers.unsafe-grafana.entrypoints=http"
       - "traefik.http.routers.unsafe-grafana.middlewares=redirect-to-https@file,small-rate-limit@file"
-      - "traefik.http.routers.unsafe-grafana.rule=Host(`grafana.localhost`)"
+      - "traefik.http.routers.unsafe-grafana.rule=Host(`grafana.${SWARM_HOST}`)"
 
 
 volumes:

@@ -3,7 +3,6 @@ version: '3.8'
 services:
 
   traefik:
-    # Use the latest v2.2.x Traefik image available
     image: traefik:v2.3
     container_name: traefik
     restart: on-failure
@@ -22,18 +21,18 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.safe-dashboard.entrypoints=https"
       - "traefik.http.routers.safe-dashboard.tls=true"
-      - "traefik.http.routers.safe-dashboard.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.safe-dashboard.rule=Host(`traefik.${SWARM_HOST}`)"
       - "traefik.http.routers.safe-dashboard.service=api@internal"
       - "traefik.http.routers.safe-dashboard.middlewares=secured@file"
       - "traefik.http.routers.safe-metrics.entrypoints=https"
       - "traefik.http.routers.safe-metrics.tls=true"
-      - "traefik.http.routers.safe-metrics.rule=Host(`traefik.localhost`) && PathPrefix(`/metrics`)"
+      - "traefik.http.routers.safe-metrics.rule=Host(`traefik.${SWARM_HOST}`) && PathPrefix(`/metrics`)"
       - "traefik.http.routers.safe-metrics.service=prometheus@internal"
       - "traefik.http.routers.safe-metrics.middlewares=secured@file"
       - "traefik.http.routers.unsafe-dashboard.tls=false"
       - "traefik.http.routers.unsafe-dashboard.entrypoints=http"
       - "traefik.http.routers.unsafe-dashboard.middlewares=redirect-to-https@file"
-      - "traefik.http.routers.unsafe-dashboard.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.unsafe-dashboard.rule=Host(`traefik.${SWARM_HOST}`)"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./certs:/certificates:ro
@@ -63,12 +62,12 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.safe-whoami.entrypoints=https"
       - "traefik.http.routers.safe-whoami.tls=true"
-      - "traefik.http.routers.safe-whoami.rule=Host(`whoami.localhost`)"
+      - "traefik.http.routers.safe-whoami.rule=Host(`whoami.${SWARM_HOST}`)"
       - "traefik.http.routers.safe-whoami.middlewares=secured@file"
       - "traefik.http.routers.unsafe-whoami.tls=false"
       - "traefik.http.routers.unsafe-whoami.entrypoints=http"
       - "traefik.http.routers.unsafe-whoami.middlewares=redirect-to-https@file,small-rate-limit@file"
-      - "traefik.http.routers.unsafe-whoami.rule=Host(`whoami.localhost`)"
+      - "traefik.http.routers.unsafe-whoami.rule=Host(`whoami.${SWARM_HOST}`)"
     networks:
       - traefik-public
 
