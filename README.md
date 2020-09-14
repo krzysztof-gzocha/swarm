@@ -21,6 +21,7 @@ load to other services based on Host or other rules
 - [x] Add Grafana and configure it to read from Prometheus
 - [x] Move Prometheus, Graphana and exporters into separate docker-compose file, so user can decide if he wants to run them
 - [x] Add [DockerExporter](https://github.com/prometheus-net/docker_exporter) that can present docker swarm metrics for Prometheus
+- [x] Add BlackboxExporter
 - [ ] Basic security configuration for each and every docker
 - [ ] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server and make sure it will run on every node in HA mode
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml

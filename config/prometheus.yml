@@ -6,9 +6,27 @@ scrape_configs:
   - job_name: prometheus
     static_configs:
       - targets: ['localhost:9090']
+
   - job_name: traefik
     static_configs:
       - targets: ['traefik:8082']
+
   - job_name: docker_manager
     static_configs:
       - targets: ['docker_exporter:9417']
+
+  - job_name: blackbox
+    metrics_path: /probe
+    params:
+      module: [http_get]
+    static_configs:
+      - targets:
+          - https://www.upc.pl/    # Target to probe with http.
+          - https://www.facebook.com/   # Target to probe with https.
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox_exporter:9115

@@ -85,6 +85,28 @@ services:
         constraints:
           - node.role == manager
 
+  blackbox_exporter:
+    container_name: blackbox_exporter
+    restart: on-failure
+    image: prom/blackbox-exporter:v0.17.0
+    ports:
+      - "9115:9115"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+    volumes:
+      - ./config/services/blackbox.yml:/config/blackbox.yml:ro
+    command: --config.file=/config/blackbox.yml
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
 networks:
   monitoring:
 

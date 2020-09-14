@@ -1,0 +1,14 @@
+modules:
+  http_get:
+    prober: http
+    timeout: 10s
+    http:
+      valid_status_codes: [200, 301, 302, 303]
+      method: GET
+      preferred_ip_protocol: "ip4"
+#  tcp_connect:
+#    prober: tcp
+#    timeout: 10s
+#  icmp:
+#    prober: icmp
+#    timeout: 1m
