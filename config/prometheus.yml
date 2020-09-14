@@ -9,3 +9,6 @@ scrape_configs:
   - job_name: traefik
     static_configs:
       - targets: ['traefik:8082']
+  - job_name: docker_manager
+    static_configs:
+      - targets: ['docker_exporter:9417']
