@@ -10,7 +10,8 @@ Docker swarm setup with basic applications.
 - Prepare users list in `users` file
 - Run `docker-compose -f traefik.yml -f pihole.yml -f monitoring.yml up` to get all services running
 - PiHole admin panel password is "passw0rd", but that does not matter that much as Traefik will restrict access only by users you've mentioned in `users` file
-- Visit https://traefik.localhost/dashboard/ or https://pihole.localhost/ or https://grafana.localhost/
+- Visit https://traefik.localhost/dashboard/ or https://pihole.localhost/
+- Visit https://grafana.localhost and import [this dashboard](https://grafana.com/grafana/dashboards/11467) to see stats from docker
 - Configure your router to point to Traefik, which will then distribute the request 
 load to other services based on Host or other rules
 
@@ -19,7 +20,7 @@ load to other services based on Host or other rules
 - [x] Add Prometheus and configure it to scrape metrics from Traefik and Docker containers
 - [x] Add Grafana and configure it to read from Prometheus
 - [x] Move Prometheus, Graphana and exporters into separate docker-compose file, so user can decide if he wants to run them
-- [ ] Add DockerExporter/Swarmpit/anything that can present docker swarm metrics for Prometheus
+- [x] Add [DockerExporter](https://github.com/prometheus-net/docker_exporter) that can present docker swarm metrics for Prometheus
 - [ ] Basic security configuration for each and every docker
 - [ ] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server and make sure it will run on every node in HA mode
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
