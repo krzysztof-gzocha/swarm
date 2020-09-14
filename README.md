@@ -33,6 +33,9 @@ load to other services based on Host or other rules
 
 Yea.. that's a lot of todos..
 
+# Screens
+![Docker exporter on Grafana](https://raw.githubusercontent.com/krzysztof-gzocha/swarm/master/assets/graphana.png?token=AAXUPP2UOMUW2JKSWGUUC627L5W2K)
+
 # Common issues
 ### Port 53 is already taken
 Use `sudo lsof -i :53` to confirm
