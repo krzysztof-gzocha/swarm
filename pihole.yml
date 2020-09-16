@@ -26,6 +26,11 @@ services:
     volumes:
       - piHoleConfig:/etc/pihole/
       - piHoleDnsMasq:/etc/dnsmasq.d/
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+      - 8.8.8.8
+      - 8.8.4.4
     restart: on-failure
     labels:
       - "traefik.enable=true"

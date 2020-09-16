@@ -17,12 +17,12 @@ Docker swarm setup with basic applications.
 - Configure your router to point to Traefik, which will then distribute the requests to all services based on port, HTTP host or other rules
 
 # To do
-- [x] Add Pi Hole as DNS and admin web panel
-- [x] Add Prometheus and configure it to scrape metrics from Traefik and Docker containers
-- [x] Add Grafana and configure it to read from Prometheus
+- [x] Add [Pi-hole](https://hub.docker.com/r/pihole/pihole) as DNS and admin web panel
+- [x] Add [Prometheus](https://hub.docker.com/r/prom/prometheus) and configure it to scrape metrics from Traefik and Docker containers
+- [x] Add [Grafana](https://hub.docker.com/r/grafana/grafana) and configure it to read from Prometheus
 - [x] Move Prometheus, Graphana and exporters into separate docker-compose file, so user can decide if he wants to run them
-- [x] Add [DockerExporter](https://github.com/prometheus-net/docker_exporter) that can present docker swarm metrics for Prometheus
-- [x] Add BlackboxExporter
+- [x] Add [DockerExporter](https://github.com/prometheus-net/docker_exporter), so we can present docker metrics for Prometheus
+- [x] Add [BlackboxExporter](https://hub.docker.com/r/prom/blackbox-exporter), so we can send HTTP requests and check if network is working fine
 - [ ] Basic security configuration for each and every docker
 - [ ] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server and make sure it will run on every node in HA mode
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
