@@ -1,4 +1,6 @@
-# Swarm
+![Build](https://github.com/krzysztof-gzocha/swarm/workflows/Build/badge.svg?branch=master)
+
+# Swarm 
 Docker swarm setup with basic applications.
 
 # How to start?

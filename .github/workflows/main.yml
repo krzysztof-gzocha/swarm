@@ -1,4 +1,4 @@
-name: CI
+name: Build
 
 on:
   push:
@@ -7,16 +7,16 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
       - name: Lint Traefik
-        run: docker-compose -f traefik.yml config 
-      
+        run: docker-compose -f traefik.yml config
+
       - name: Lint Monitoring
         run: docker-compose -f traefik.yml -f monitoring.yml config
-      
+
       - name: Lint PiHole
         run: docker-compose -f traefik.yml -f pihole.yml config
