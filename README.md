@@ -3,17 +3,16 @@ Docker swarm setup with basic applications.
 
 # How to start?
 - Install all required apps:
- - Docker
- - Docker compose
+    - Docker
+    - Docker compose
 - `docker network create --driver=overlay traefik-public`
 - Generate certificates (read certs/README.md for that)
-- Prepare users list in `users` file
+- Prepare users list for Traefik in `users` file
 - Run `docker-compose -f traefik.yml -f pihole.yml -f monitoring.yml up` to get all services running
 - PiHole admin panel password is "passw0rd", but that does not matter that much as Traefik will restrict access only by users you've mentioned in `users` file
 - Visit https://traefik.localhost/dashboard/ or https://pihole.localhost/
 - Visit https://grafana.localhost and import [this dashboard](https://grafana.com/grafana/dashboards/11467) to see stats from docker
-- Configure your router to point to Traefik, which will then distribute the request 
-load to other services based on Host or other rules
+- Configure your router to point to Traefik, which will then distribute the requests to all services based on port, HTTP host or other rules
 
 # To do
 - [x] Add Pi Hole as DNS and admin web panel
@@ -28,6 +27,8 @@ load to other services based on Host or other rules
 - [ ] Add [Shinobi](https://hub.docker.com/r/shinobisystems/shinobi) as video surveillance center 
 - [ ] Add [Mosquitto](https://hub.docker.com/_/eclipse-mosquitto) as MQTT broker
 - [ ] Add [NextCloud](https://hub.docker.com/_/nextcloud) as file sharing center
+- [ ] Add [Emby](https://hub.docker.com/r/emby/embyserver) as media server
+- [ ] Add [OpenFaaS](https://www.openfaas.com/)
 - [ ] Test on actual Docker swarm with multiple nodes
 - [ ] Benchmark the hardware requirements with full setup using metrics from Prometheus
 - [ ] Write README about how to deploy new versions of any service\
