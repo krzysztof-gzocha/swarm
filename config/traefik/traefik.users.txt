@@ -1,0 +1,2 @@
+# admin:admin
+admin:$2b$10$hB.CQCOTPSFO5GSZwiQOaujcPVh.i0cjKp0Pb2rcHC4/OIJazGIa2

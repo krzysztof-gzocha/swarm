@@ -4,18 +4,17 @@ http:
     secured:
       chain:
         middlewares:
-        # - internal-network
+          - internal-network # comment this out when you want to accept requests from the outside
           - redirect-to-https
           - security-headers
-          - authelia
+          - users
+#          - authelia # uncomment this if you are not afraid of 1GB of RAM missing..
 
-    authelia:
-      forwardAuth:
-        address: "http://authelia:9091/api/verify?rd=https://login.house.swarm/"
-        trustForwardHeader: true
-        authResponseHeaders:
-          - "Remote-User"
-          - "Remote-Groups"
+    users:
+      basicAuth:
+        realm: HouseSwarm
+        usersFile: "/configuration/dynamic/traefik.users.txt"
+
 
     redirect-to-https:
       redirectScheme:
@@ -45,3 +44,12 @@ http:
         sslRedirect: true
         contentTypeNosniff: true
         browserXssFilter: true
+
+# uncomment if you would like to authenticate your users with authelio
+#    authelia:
+#      forwardAuth:
+#        address: "http://authelia:9091/api/verify?rd=https://login.house.swarm/"
+#        trustForwardHeader: true
+#        authResponseHeaders:
+#          - "Remote-User"
+#          - "Remote-Groups"

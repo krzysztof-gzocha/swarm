@@ -13,7 +13,7 @@ Docker swarm setup with basic applications.
 - Run `docker-compose -f traefik.yml -f pihole.yml -f monitoring.yml up` to get all services running
 - PiHole admin panel password is "passw0rd", but that does not matter that much as Traefik will restrict access only by users you've mentioned in `users` file
 - Visit https://traefik.localhost/dashboard/ or https://pihole.localhost/
-- Visit https://grafana.localhost and import [this dashboard](https://grafana.com/grafana/dashboards/11467) to see stats from docker
+- Visit https://grafana.localhost and import [this dashboard](https://grafana.com/grafana/dashboards/11467) to see stats from docker and [this dashboard](https://grafana.com/grafana/dashboards/11529) for network metrics and maybe import dashboard from assets/traefik_dashboard.json
 - Configure your router to point to Traefik, which will then distribute the requests to all services based on port, HTTP host or other rules
 
 # To do

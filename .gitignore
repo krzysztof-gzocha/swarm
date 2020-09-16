@@ -3,3 +3,5 @@ certs/*.crt
 certs/*.key
 certs/*.pem
 certs/*.csr
+certs/*.srl
+config/authelia/notification.txt

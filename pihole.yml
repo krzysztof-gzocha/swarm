@@ -4,8 +4,6 @@ services:
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
-    security_opt:
-      - no-new-privileges:true
     deploy:
       mode: replicated
       replicas: 1
@@ -18,11 +16,11 @@ services:
       - "53/udp"
       - "80/tcp"
     environment:
-      TZ: "${SWARM_TZ}"
-      DNSSEC: "true"
-      DNS1: "127.0.0.1"
-      DNS2: "1.1.1.1"
-      WEBPASSWORD: 'passw0rd' # access to admin panel will be covered by Traefik
+      - "TZ=${SWARM_TZ}"
+      - "DNSSEC=true"
+      - "DNS1=127.0.0.1"
+      - "DNS2=1.1.1.1"
+      - "WEBPASSWORD=passw0rd" # access to admin panel will be covered by Traefik
     volumes:
       - piHoleConfig:/etc/pihole/
       - piHoleDnsMasq:/etc/dnsmasq.d/
