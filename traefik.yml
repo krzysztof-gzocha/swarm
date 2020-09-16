@@ -36,7 +36,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./certs:/certificates:ro
-      - ./config:/configuration:ro
+      - ./config/traefik:/configuration/dynamic:ro
+      - ./config/traefik.yml:/configuration/traefik.yml:ro
     command:
       - --configFile=/configuration/traefik.yml
     networks:
@@ -63,7 +64,7 @@ services:
       - "traefik.http.routers.safe-whoami.entrypoints=https"
       - "traefik.http.routers.safe-whoami.tls=true"
       - "traefik.http.routers.safe-whoami.rule=Host(`whoami.${SWARM_HOST}`)"
-      - "traefik.http.routers.safe-whoami.middlewares=secured@file"
+      - "traefik.http.routers.safe-whoami.middlewares=secured@file,authelia@file"
       - "traefik.http.routers.unsafe-whoami.tls=false"
       - "traefik.http.routers.unsafe-whoami.entrypoints=http"
       - "traefik.http.routers.unsafe-whoami.middlewares=redirect-to-https@file,small-rate-limit@file"

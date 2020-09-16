@@ -4,10 +4,18 @@ http:
     secured:
       chain:
         middlewares:
-          - internal-network
+        # - internal-network
           - redirect-to-https
-          - auth-users
           - security-headers
+          - authelia
+
+    authelia:
+      forwardAuth:
+        address: "http://authelia:9091/api/verify?rd=https://login.house.swarm/"
+        trustForwardHeader: true
+        authResponseHeaders:
+          - "Remote-User"
+          - "Remote-Groups"
 
     redirect-to-https:
       redirectScheme:
@@ -30,12 +38,6 @@ http:
       rateLimit:
         average: 100
         burst: 50
-
-    auth-users:
-      basicAuth:
-        removeHeader: true
-        realm: basic
-        usersFile: "/configuration/users"
 
     security-headers:
       headers:

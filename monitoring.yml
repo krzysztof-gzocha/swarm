@@ -98,7 +98,7 @@ services:
     depends_on:
       - prometheus
     volumes:
-      - ./config/services/blackbox.yml:/config/blackbox.yml:ro
+      - ./config/blackbox.yml:/config/blackbox.yml:ro
     command: --config.file=/config/blackbox.yml
     deploy:
       mode: replicated

@@ -16,7 +16,7 @@ global:
 providers:
   file:
     watch: true
-    directory: /configuration/services
+    directory: /configuration/dynamic
   docker:
     watch: true
     network: traefik-public
@@ -40,10 +40,6 @@ serversTransport:
     - /certificates/ca.crt
 
 tls:
-  certificates:
-    - certFile: /certificates/ca.crt
-      keyFile: /certificates/ca.key
-
   options:
     default:
       sniStrict: false
@@ -54,5 +50,5 @@ tls:
   stores:
     default:
       defaultCertificate:
-        certFile: /certificates/cert.crt
-        keyFile: /certificates/cert.key
+        certFile: /certificates/server.crt
+        keyFile: /certificates/server.key
