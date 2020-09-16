@@ -16,7 +16,7 @@ jobs:
         run: docker-compose -f traefik.yml config 
       
       - name: Lint Monitoring
-        run: docker-compose -f monitoring.yml config
+        run: docker-compose -f traefik.yml -f monitoring.yml config
       
       - name: Lint PiHole
-        run: docker-compose -f pihole.yml config
+        run: docker-compose -f traefik.yml -f pihole.yml config
