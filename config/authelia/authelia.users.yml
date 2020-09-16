@@ -9,12 +9,3 @@ users:
     email: admin@localhost
     groups:
       - admins
-      - dev
-
-  guest:
-    displayname: "Guest"
-    # password is guest
-    password: "$argon2id$v=19$m=1048576,t=1,p=8$TzEzS0VsY2ZGYnZYUjk5cg$f5nTV83uUaXpEDa3QHzBE8JkNRR7HdjQvaZRvKXDrko"
-    email: guest@localhost
-    groups:
-      - guest

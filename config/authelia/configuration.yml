@@ -5,8 +5,8 @@
 # The host and port to listen on
 host: 0.0.0.0
 port: 9091
-tls_key: /config/ssl/key.pem
-tls_cert: /config/ssl/cert.pem
+#tls_key: /config/ssl/ca.key
+#tls_cert: /config/ssl/ca.crt
 
 # Configuration options specific to the internal http server
 server:
@@ -39,7 +39,7 @@ log_level: debug
 #
 # Note: this parameter is optional. If not provided, user won't
 # be redirected upon successful authentication.
-#default_redirection_url: https://home.example.com:8080/
+default_redirection_url: https://login.house.swarm/
 
 # TOTP Settings
 #
@@ -47,7 +47,7 @@ log_level: debug
 totp:
   # The issuer name displayed in the Authenticator application of your choice
   # See: https://github.com/google/google-authenticator/wiki/Key-Uri-Format for more info on issuer names
-  issuer: authelia.com
+  issuer: house.swarm
   # The period in seconds a one-time password is current for. Changing this will require all traefik.users to register
   # their TOTP applications again.
   # Warning: before changing period read the docs link below.
@@ -221,12 +221,11 @@ access_control:
   default_policy: deny
 
   rules:
-    # Rules applied to everyone
-    - domain: traefik.localhost
+    - domain: login.house.swarm
       policy: bypass
 
-    - domain: grafana.localhost
-      policy: one_factor
+    - domain: "*.house.swarm"
+      policy: two_factor
 #      # Network based rule, if not provided any network matches.
 #      networks:
 #        - 192.168.1.0/24
@@ -292,7 +291,7 @@ session:
   # Secret can also be set using a secret: https://docs.authelia.com/configuration/secrets.html
   #  secret: insecure_session_secret
   # The time in seconds before the cookie expires and session is reset.
-  expiration: 5hh
+  expiration: 5h
 
   # The inactivity time in seconds before the session is reset.
   inactivity: 30m
@@ -307,7 +306,7 @@ session:
   # The domain to protect.
   # Note: the authenticator must also be in that domain. If empty, the cookie
   # is restricted to the subdomain of the issuer.
-  domain: localhost
+  domain: house.swarm
 
   # The redis connection details
 #  redis:
@@ -346,8 +345,8 @@ regulation:
 # You must use only an available configuration: local, mysql, postgres
 storage:
   # The directory where the DB files will be saved
- local:
-   path: /config/db/db.sqlite3
+  local:
+    path: /config/db/db.sqlite3
 
   # Settings to connect to MySQL server
 #  mysql:
@@ -373,13 +372,13 @@ storage:
 # Notifications are sent to traefik.users when they require a password reset, a u2f
 # registration or a TOTP registration.
 # Use only an available configuration: filesystem, smtp.
-#notifier:
-#  # You can disable the notifier startup check by setting this to true.
-#  disable_startup_check: false
+notifier:
+  # You can disable the notifier startup check by setting this to true.
+  disable_startup_check: false
 #
 #  # For testing purpose, notifications can be sent in a file
-#  ## filesystem:
-#  ##   filename: /config/notification.txt
+  filesystem:
+    filename: /config/notification.txt
 #
 #  # Use a SMTP server for sending notifications. Authelia uses PLAIN or LOGIN method to authenticate.
 #  # [Security] By default Authelia will:

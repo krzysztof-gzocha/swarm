@@ -2,23 +2,25 @@ version: '3.8'
 
 secrets:
   jwt:
-    file: ./config/secrets/jwt
+    file: ./config/secrets/authelia_jwt
   session:
-    file: ./config/secrets/session
+    file: ./config/secrets/authelia_session
 
 services:
   authelia:
     image: authelia/authelia:4.21.0
     container_name: authelia
-    restart: unless-stopped
+    restart: on-failure
+    secrets:
+      - jwt
+      - session
     ports:
       - "9091"
     depends_on:
       - traefik
     volumes:
-      - ./config/authelia.users.yml:/config/authelia.users.yml
-      - ./certs/ca.crt:/config/ssl/cert.pem
-      - ./certs/ca.key:/config/ssl/key.pem
+      - ./config/authelia:/config
+      - ./certs:/config/ssl:ro
       - autheliaDb:/config/db/
     networks:
       - traefik-public
@@ -42,9 +44,6 @@ services:
       - "TZ=${SWARM_TZ}"
       - "AUTHELIA_JWT_SECRET_FILE=/run/secrets/jwt"
       - "AUTHELIA_SESSION_SECRET_FILE=/run/secrets/session"
-    secrets:
-      - jwt
-      - session
 
 volumes:
   autheliaDb:
