@@ -1,3 +1,4 @@
 .idea/
 certs/*.crt
 certs/*.key
+certs/*.pem
