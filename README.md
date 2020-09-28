@@ -24,7 +24,7 @@ Docker swarm setup with basic applications.
 - [x] Add [DockerExporter](https://github.com/prometheus-net/docker_exporter), so we can present docker metrics for Prometheus
 - [x] Add [BlackboxExporter](https://hub.docker.com/r/prom/blackbox-exporter), so we can send HTTP requests and check if network is working fine
 - [ ] Basic security configuration for each and every docker
-- [ ] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server and make sure it will run on every node in HA mode
+- [x] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server. It's taking at least 1 GB RAM, so be careful
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
 - [ ] Add [Shinobi](https://hub.docker.com/r/shinobisystems/shinobi) as video surveillance center 
 - [ ] Add [Mosquitto](https://hub.docker.com/_/eclipse-mosquitto) as MQTT broker
