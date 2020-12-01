@@ -9,8 +9,9 @@ services:
     security_opt:
       - no-new-privileges:true
     ports:
-      - 80:80
-      - 443:443
+      - 80:80/tcp
+      - 443:443/tcp
+      - 8883:8883/tcp
       - 53:53
       - 53:53/udp
     deploy:

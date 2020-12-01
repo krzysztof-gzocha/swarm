@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+
+  mqtt:
+    image: eclipse-mosquitto:1.6.12-openssl
+    container_name: mosquitto
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 1883/tcp
+    depends_on:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.services.mqtt.loadbalancer.server.port=1883"
+      - "traefik.tcp.routers.tcpr_mqtt.entrypoints=mqtt"
+      - "traefik.tcp.routers.tcpr_mqtt.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.tcpr_mqtt.service=mqtt"
+      - "traefik.tcp.routers.tcpr_mqtt.tls=true"
+    volumes:
+      - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro,rslave
+      - ./config/secrets/mosquitto_users:/mosquitto/config/users:ro,rslave
+    networks:
+      - traefik-public
+
+volumes:
+  mosquittoData:
