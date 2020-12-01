@@ -28,7 +28,7 @@ Docker swarm setup with basic applications.
 - [x] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server. It's taking at least 1 GB RAM, so be careful
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
 - [ ] Add [Shinobi](https://hub.docker.com/r/shinobisystems/shinobi) as video surveillance center 
-- [ ] Add [Mosquitto](https://hub.docker.com/_/eclipse-mosquitto) as MQTT broker
+- [x] Add [Mosquitto](https://hub.docker.com/_/eclipse-mosquitto) as MQTT broker
 - [ ] Add [NextCloud](https://hub.docker.com/_/nextcloud) as file sharing center
 - [ ] Add [Emby](https://hub.docker.com/r/emby/embyserver) as media server
 - [ ] Add [OpenFaaS](https://www.openfaas.com/)
