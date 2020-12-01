@@ -4,7 +4,9 @@ http:
     secured:
       chain:
         middlewares:
-          - internal-network # comment this out when you want to accept requests from the outside
+# Remove comments when you want to accept requests only from the inside
+# Probably would be the best to keep it as first middleware
+#          - internal-network
           - redirect-to-https
           - security-headers
           - users
@@ -12,9 +14,9 @@ http:
 
     users:
       basicAuth:
+        removeHeader: true
         realm: HouseSwarm
         usersFile: "/configuration/dynamic/traefik.users.txt"
-
 
     redirect-to-https:
       redirectScheme:
@@ -35,7 +37,7 @@ http:
 
     big-rate-limit:
       rateLimit:
-        average: 100
+        average: 50
         burst: 50
 
     security-headers:

@@ -10,6 +10,7 @@ Docker swarm setup with basic applications.
 - `docker network create --driver=overlay traefik-public`
 - Generate certificates (read [certs/README.md](https://github.com/krzysztof-gzocha/swarm/blob/master/certs/README.md) for that)
 - Prepare users list for Traefik in `users` file
+- Update all secrets in `config/secrets`
 - Run `docker-compose -f traefik.yml -f pihole.yml -f monitoring.yml up` to get all services running
 - PiHole admin panel password is "passw0rd", but that does not matter that much as Traefik will restrict access only by users you've mentioned in `users` file
 - Visit https://traefik.localhost/dashboard/ or https://pihole.localhost/

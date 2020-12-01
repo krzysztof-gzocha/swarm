@@ -18,6 +18,12 @@ services:
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheusData:/prometheus
+    command: [
+      "--storage.tsdb.retention.time=3d", 
+      "--config.file=/etc/prometheus/prometheus.yml", 
+      "--storage.tsdb.path=/prometheus", 
+      "--web.console.libraries=/",
+    ]
     labels:
       # No need to access Prometheus from outside world,
       # but if required change and ucomment all labels
@@ -84,6 +90,23 @@ services:
       placement:
         constraints:
           - node.role == manager
+
+  node_exporter:
+    image: prom/node-exporter
+    restart: always
+    container_name: node_exporter
+    user: "995:995"
+    ports:
+      - "9100"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+    volumes:
+      - /:/hostfs:ro,rslave
+    command: ["--path.rootfs=/hostfs"]
 
   blackbox_exporter:
     container_name: blackbox_exporter

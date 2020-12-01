@@ -19,16 +19,11 @@ services:
       - "TZ=${SWARM_TZ}"
       - "DNSSEC=true"
       - "DNS1=127.0.0.1"
-      - "DNS2=1.1.1.1"
+      - "DNS2=9.9.9.9"
       - "WEBPASSWORD=passw0rd" # access to admin panel will be covered by Traefik
     volumes:
       - piHoleConfig:/etc/pihole/
       - piHoleDnsMasq:/etc/dnsmasq.d/
-    dns:
-      - 127.0.0.1
-      - 1.1.1.1
-      - 8.8.8.8
-      - 8.8.4.4
     restart: on-failure
     labels:
       - "traefik.enable=true"
