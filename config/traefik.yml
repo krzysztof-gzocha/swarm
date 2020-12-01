@@ -1,14 +1,16 @@
 entryPoints:
   https:
-    address: ":443"
+    address: ":443/tcp"
   http:
-    address: ":80"
+    address: ":80/tcp"
   metrics:
-    address: ":8082"
+    address: ":8082/tcp"
   dns53tcp:
     address: ":53/tcp"
   dns53udp:
     address: ":53/udp"
+  mqtt:
+    address: ":8883/tcp"
 
 global:
   checkNewVersion: true
