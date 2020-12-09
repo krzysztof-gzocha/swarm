@@ -1,6 +1,12 @@
 # How to generate new cert?
 https://scriptcrunch.com/create-ca-tls-ssl-certificates-keys/
 
+# Simplest installation
+Install mkcert with this link: https://github.com/FiloSottile/mkcert#installation
+```
+~/mkcert-v1.4.3-linux-amd64 --install -ecdsa -cert-file server.crt -key-file server.key "*.house.swarm"
+```
+
 ## CA
 
 ### Generate "certificate authority" certificate

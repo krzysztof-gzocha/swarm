@@ -38,8 +38,8 @@ api:
 
 serversTransport:
   insecureSkipVerify: true
-  rootCAs:
-    - /certificates/ca.crt
+  #rootCAs:
+  #  - /certificates/ca.crt
 
 tls:
   options:
