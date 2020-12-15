@@ -24,13 +24,18 @@ Docker swarm setup with basic applications.
 - [x] Move Prometheus, Graphana and exporters into separate docker-compose file, so user can decide if he wants to run them
 - [x] Add [DockerExporter](https://github.com/prometheus-net/docker_exporter), so we can present docker metrics for Prometheus
 - [x] Add [BlackboxExporter](https://hub.docker.com/r/prom/blackbox-exporter), so we can send HTTP requests and check if network is working fine
-- [ ] Basic security configuration for each and every docker
+- [x] Add Bazarr
+- [x] Add Sonarr
+- [x] Add Jackett
+- [x] Add Radarr
+- [x] Add qBitTorrent with OpenVPN (and NordVPN configuration)
+- [x] Basic security configuration for each and every docker
 - [x] Add [Authelia](https://github.com/authelia/authelia), configure Traefik to use it as authentication server. It's taking at least 1 GB RAM, so be careful
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
 - [ ] Add [Shinobi](https://hub.docker.com/r/shinobisystems/shinobi) as video surveillance center 
 - [x] Add [Mosquitto](https://hub.docker.com/_/eclipse-mosquitto) as MQTT broker
 - [ ] Add [NextCloud](https://hub.docker.com/_/nextcloud) as file sharing center
-- [ ] Add [Emby](https://hub.docker.com/r/emby/embyserver) as media server
+- [x] Add Jellyfin media server (DLNA not supported yet..)
 - [ ] Add [OpenFaaS](https://www.openfaas.com/)
 - [ ] Test on actual Docker swarm with multiple nodes
 - [ ] Benchmark the hardware requirements with full setup using metrics from Prometheus
