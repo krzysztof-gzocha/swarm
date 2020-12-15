@@ -6,7 +6,7 @@ services:
     image: ghcr.io/linuxserver/jackett
     depends_on:
       - traefik
-    restart: always
+    restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     environment:
@@ -35,7 +35,7 @@ services:
   sonarr:
     container_name: sonarr
     image: ghcr.io/linuxserver/sonarr
-    restart: always
+    restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     depends_on:
@@ -66,7 +66,7 @@ services:
   radarr:
     container_name: radarr
     image: ghcr.io/linuxserver/radarr
-    restart: always
+    restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     depends_on:
@@ -97,7 +97,7 @@ services:
   bazarr:
     container_name: bazarr
     image: ghcr.io/linuxserver/bazarr
-    restart: always
+    restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     ports:
@@ -149,7 +149,7 @@ services:
       - ./config/qBittorrent.conf:/config/qBittorrent/config/qBittorrent.conf
       - ./config/nordvpn:/config/openvpn
       - /media/veracrypt1/downloads:/downloads
-    restart: always
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.safe-torrent.entrypoints=https"

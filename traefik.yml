@@ -5,7 +5,7 @@ services:
   traefik:
     image: traefik:v2.3
     container_name: traefik
-    restart: on-failure
+    restart: "unless-stopped"
     security_opt:
       - no-new-privileges:true
     ports:
@@ -51,7 +51,7 @@ services:
     image: containous/whoami
     depends_on:
       - traefik
-    restart: on-failure
+    restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     ports:

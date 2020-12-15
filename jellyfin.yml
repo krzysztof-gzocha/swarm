@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+
+  # https://jellyfin.org/docs/general/networking/traefik2.html
+  jellyfin:
+    image: jellyfin/jellyfin
+    security_opt:
+      - no-new-privileges:true
+    container_name: jellyfin
+    depends_on:
+      - traefik
+    # network_mode: host # required for DLNA
+    ports:
+      - 8096/tcp
+    networks:
+      - traefik-public
+    volumes:
+      - jellyfinConfig:/config
+      - jellyfinCache:/cache
+      - /media/veracrypt1:/media:ro
+    restart: "unless-stopped"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-jellyfin.entrypoints=https"
+      - "traefik.http.routers.safe-jellyfin.tls=true"
+      - "traefik.http.routers.safe-jellyfin.rule=Host(`jellyfin.${SWARM_HOST}`)"
+      - "traefik.http.routers.safe-jellyfin.middlewares=secured@file"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      - "traefik.http.routers.unsafe-jellyfin.tls=false"
+      - "traefik.http.routers.unsafe-jellyfin.entrypoints=http"
+      - "traefik.http.routers.unsafe-jellyfin.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-jellyfin.rule=Host(`jellyfin.${SWARM_HOST}`)"
+
+volumes:
+  jellyfinConfig:
+  jellyfinCache:

@@ -4,7 +4,7 @@ services:
   prometheus:
     image: prom/prometheus:v2.20.1
     container_name: prometheus
-    restart: on-failure
+    restart: unless-stopped
     deploy:
       mode: replicated
       replicas: 1
@@ -40,7 +40,7 @@ services:
   grafana:
     image: grafana/grafana:7.1.5
     container_name: grafana
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - "3000"
     security_opt:
@@ -72,7 +72,7 @@ services:
 
   docker_exporter:
     image: prometheusnet/docker_exporter
-    restart: on-failure
+    restart: unless-stopped
     container_name: docker_exporter
     ports:
       - "9417"
@@ -93,7 +93,7 @@ services:
 
   node_exporter:
     image: prom/node-exporter
-    restart: always
+    restart: unless-stopped
     container_name: node_exporter
     user: "995:995"
     ports:
@@ -110,7 +110,7 @@ services:
 
   blackbox_exporter:
     container_name: blackbox_exporter
-    restart: on-failure
+    restart: unless-stopped
     image: prom/blackbox-exporter:v0.17.0
     ports:
       - "9115:9115"

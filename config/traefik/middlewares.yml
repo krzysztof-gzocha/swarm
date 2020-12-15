@@ -46,6 +46,9 @@ http:
         sslRedirect: true
         contentTypeNosniff: true
         browserXssFilter: true
+        customResponseHeaders:
+          X-Robots-Tag: "noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+
 
 # uncomment if you would like to authenticate your users with authelio
 #    authelia:
