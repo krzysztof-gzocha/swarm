@@ -1,0 +1,172 @@
+version: '3.8'
+
+services:
+  jackett:
+    container_name: jackett
+    image: ghcr.io/linuxserver/jackett
+    depends_on:
+      - traefik
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - "TZ=${SWARM_TZ}"
+      - AUTO_UPDATE=true
+    volumes:
+      - jackettConfig:/config
+      - /media/veracrypt1/downloads:/downloads
+    ports:
+      - "9117/tcp"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-jackett.entrypoints=https"
+      - "traefik.http.routers.safe-jackett.tls=true"
+      - "traefik.http.routers.safe-jackett.rule=Host(`jackett.${SWARM_HOST}`)"
+      - "traefik.http.routers.safe-jackett.middlewares=secured@file"
+      - "traefik.http.routers.unsafe-jackett.tls=false"
+      - "traefik.http.routers.unsafe-jackett.entrypoints=http"
+      - "traefik.http.routers.unsafe-jackett.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-jackett.rule=Host(`jackett.${SWARM_HOST}`)"
+    networks:
+      - traefik-public
+
+  sonarr:
+    container_name: sonarr
+    image: ghcr.io/linuxserver/sonarr
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - jackett
+    ports:
+      - "8989/tcp"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - "TZ=${SWARM_TZ}"
+    volumes:
+      - sonarrConfig:/config
+      - /media/veracrypt1/Seriale:/tv
+      - /media/veracrypt1/downloads:/downloads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-sonarr.entrypoints=https"
+      - "traefik.http.routers.safe-sonarr.tls=true"
+      - "traefik.http.routers.safe-sonarr.rule=Host(`sonarr.${SWARM_HOST}`)"
+      - "traefik.http.routers.safe-sonarr.middlewares=secured@file"
+      - "traefik.http.routers.unsafe-sonarr.tls=false"
+      - "traefik.http.routers.unsafe-sonarr.entrypoints=http"
+      - "traefik.http.routers.unsafe-sonarr.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-sonarr.rule=Host(`sonarr.${SWARM_HOST}`)"
+    networks:
+      - traefik-public
+
+  radarr:
+    container_name: radarr
+    image: ghcr.io/linuxserver/radarr
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - jackett
+    ports:
+      - "7878/tcp"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - "TZ=${SWARM_TZ}"
+    volumes:
+      - radarrConfig:/config
+      - /media/veracrypt1/Filmy:/movies
+      - /media/veracrypt1/downloads:/downloads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-radarr.entrypoints=https"
+      - "traefik.http.routers.safe-radarr.tls=true"
+      - "traefik.http.routers.safe-radarr.rule=Host(`radarr.${SWARM_HOST}`)"
+      - "traefik.http.routers.safe-radarr.middlewares=secured@file"
+      - "traefik.http.routers.unsafe-radarr.tls=false"
+      - "traefik.http.routers.unsafe-radarr.entrypoints=http"
+      - "traefik.http.routers.unsafe-radarr.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-radarr.rule=Host(`radarr.${SWARM_HOST}`)"
+    networks:
+      - traefik-public
+
+  bazarr:
+    container_name: bazarr
+    image: ghcr.io/linuxserver/bazarr
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 6767/tcp
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - "TZ=${SWARM_TZ}"
+    volumes:
+      - bazarrConfig:/config
+      - /media/veracrypt1/Seriale:/tv
+      - /media/veracrypt1/Filmy:/movies
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-bazarr.entrypoints=https"
+      - "traefik.http.routers.safe-bazarr.tls=true"
+      - "traefik.http.routers.safe-bazarr.rule=Host(`bazarr.${SWARM_HOST}`)"
+      - "traefik.http.routers.safe-bazarr.middlewares=secured@file"
+      - "traefik.http.routers.unsafe-bazarr.tls=false"
+      - "traefik.http.routers.unsafe-bazarr.entrypoints=http"
+      - "traefik.http.routers.unsafe-bazarr.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-bazarr.rule=Host(`bazarr.${SWARM_HOST}`)"
+    networks:
+      - traefik-public
+
+  torrent:
+    image: markusmcnugen/qbittorrentvpn
+    container_name: torrent
+    devices: 
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8080/tcp
+      - 8999:8999/tcp
+      - 8999:8999/udp
+    depends_on:
+      - traefik
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - VPN_ENABLED=yes
+      - LAN_NETWORK=172.0.0.0/8
+      - PUID=1000
+      - PGID=1000
+      - "TZ=${SWARM_TZ}"
+      - WEBUI_PORT=8080
+    volumes:
+      - ./config/qBittorrent.conf:/config/qBittorrent/config/qBittorrent.conf
+      - ./config/nordvpn:/config/openvpn
+      - /media/veracrypt1/downloads:/downloads
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-torrent.entrypoints=https"
+      - "traefik.http.routers.safe-torrent.tls=true"
+      - "traefik.http.routers.safe-torrent.rule=Host(`torrent.${SWARM_HOST}`)"
+      - "traefik.http.routers.safe-torrent.middlewares=secured@file"
+      - "traefik.http.services.torrent.loadbalancer.server.port=8080"
+      - "traefik.http.routers.unsafe-torrent.tls=false"
+      - "traefik.http.routers.unsafe-torrent.entrypoints=http"
+      - "traefik.http.routers.unsafe-torrent.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-torrent.rule=Host(`torrent.${SWARM_HOST}`)"
+    networks:
+      - traefik-public
+
+
+volumes:
+  jackettConfig: 
+  radarrConfig:
+  sonarrConfig:
+  bazarrConfig:
