@@ -24,7 +24,7 @@ services:
     volumes:
       - piHoleConfig:/etc/pihole/
       - piHoleDnsMasq:/etc/dnsmasq.d/
-    restart: on-failure
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.safe-pihole.entrypoints=https"
