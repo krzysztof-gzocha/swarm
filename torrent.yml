@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   jackett:
@@ -10,8 +10,8 @@ services:
     security_opt:
       - no-new-privileges:true
     environment:
-      - PUID=1000
-      - PGID=1000
+      - "PUID=${SWARM_PUID}"
+      - "PGID=${SWARM_PGID}"
       - "TZ=${SWARM_TZ}"
       - AUTO_UPDATE=true
     volumes:
@@ -24,7 +24,7 @@ services:
       - "traefik.http.routers.safe-jackett.entrypoints=https"
       - "traefik.http.routers.safe-jackett.tls=true"
       - "traefik.http.routers.safe-jackett.rule=Host(`jackett.${SWARM_HOST}`)"
-      - "traefik.http.routers.safe-jackett.middlewares=secured@file"
+      - "traefik.http.routers.safe-jackett.middlewares=media-secured@file"
       - "traefik.http.routers.unsafe-jackett.tls=false"
       - "traefik.http.routers.unsafe-jackett.entrypoints=http"
       - "traefik.http.routers.unsafe-jackett.middlewares=redirect-to-https@file,small-rate-limit@file"
@@ -43,8 +43,8 @@ services:
     ports:
       - "8989/tcp"
     environment:
-      - PUID=1000
-      - PGID=1000
+      - "PUID=${SWARM_PUID}"
+      - "PGID=${SWARM_PGID}"
       - "TZ=${SWARM_TZ}"
     volumes:
       - sonarrConfig:/config
@@ -55,7 +55,7 @@ services:
       - "traefik.http.routers.safe-sonarr.entrypoints=https"
       - "traefik.http.routers.safe-sonarr.tls=true"
       - "traefik.http.routers.safe-sonarr.rule=Host(`sonarr.${SWARM_HOST}`)"
-      - "traefik.http.routers.safe-sonarr.middlewares=secured@file"
+      - "traefik.http.routers.safe-sonarr.middlewares=media-secured@file"
       - "traefik.http.routers.unsafe-sonarr.tls=false"
       - "traefik.http.routers.unsafe-sonarr.entrypoints=http"
       - "traefik.http.routers.unsafe-sonarr.middlewares=redirect-to-https@file,small-rate-limit@file"
@@ -74,8 +74,8 @@ services:
     ports:
       - "7878/tcp"
     environment:
-      - PUID=1000
-      - PGID=1000
+      - "PUID=${SWARM_PUID}"
+      - "PGID=${SWARM_PGID}"
       - "TZ=${SWARM_TZ}"
     volumes:
       - radarrConfig:/config
@@ -86,7 +86,7 @@ services:
       - "traefik.http.routers.safe-radarr.entrypoints=https"
       - "traefik.http.routers.safe-radarr.tls=true"
       - "traefik.http.routers.safe-radarr.rule=Host(`radarr.${SWARM_HOST}`)"
-      - "traefik.http.routers.safe-radarr.middlewares=secured@file"
+      - "traefik.http.routers.safe-radarr.middlewares=media-secured@file"
       - "traefik.http.routers.unsafe-radarr.tls=false"
       - "traefik.http.routers.unsafe-radarr.entrypoints=http"
       - "traefik.http.routers.unsafe-radarr.middlewares=redirect-to-https@file,small-rate-limit@file"
@@ -103,8 +103,8 @@ services:
     ports:
       - 6767/tcp
     environment:
-      - PUID=1000
-      - PGID=1000
+      - "PUID=${SWARM_PUID}"
+      - "PGID=${SWARM_PGID}"
       - "TZ=${SWARM_TZ}"
     volumes:
       - bazarrConfig:/config
@@ -115,7 +115,7 @@ services:
       - "traefik.http.routers.safe-bazarr.entrypoints=https"
       - "traefik.http.routers.safe-bazarr.tls=true"
       - "traefik.http.routers.safe-bazarr.rule=Host(`bazarr.${SWARM_HOST}`)"
-      - "traefik.http.routers.safe-bazarr.middlewares=secured@file"
+      - "traefik.http.routers.safe-bazarr.middlewares=media-secured@file"
       - "traefik.http.routers.unsafe-bazarr.tls=false"
       - "traefik.http.routers.unsafe-bazarr.entrypoints=http"
       - "traefik.http.routers.unsafe-bazarr.middlewares=redirect-to-https@file,small-rate-limit@file"
@@ -141,8 +141,8 @@ services:
     environment:
       - VPN_ENABLED=yes
       - LAN_NETWORK=172.0.0.0/8
-      - PUID=1000
-      - PGID=1000
+      - "PUID=${SWARM_PUID}"
+      - "PGID=${SWARM_PGID}"
       - "TZ=${SWARM_TZ}"
       - WEBUI_PORT=8080
     volumes:
@@ -155,7 +155,7 @@ services:
       - "traefik.http.routers.safe-torrent.entrypoints=https"
       - "traefik.http.routers.safe-torrent.tls=true"
       - "traefik.http.routers.safe-torrent.rule=Host(`torrent.${SWARM_HOST}`)"
-      - "traefik.http.routers.safe-torrent.middlewares=secured@file"
+      - "traefik.http.routers.safe-torrent.middlewares=media-secured@file"
       - "traefik.http.services.torrent.loadbalancer.server.port=8080"
       - "traefik.http.routers.unsafe-torrent.tls=false"
       - "traefik.http.routers.unsafe-torrent.entrypoints=http"

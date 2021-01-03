@@ -15,19 +15,21 @@ scrape_configs:
     static_configs:
       - targets: ['node_exporter:9100']
 
-  - job_name: blackbox
-    metrics_path: /probe
-    params:
-      module: [http_get]
-    static_configs:
-      - targets:
-          - https://www.up.pl/
-          - https://www.google.pl/
-          - https://www.youtube.com/
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: __param_target
-      - source_labels: [__param_target]
-        target_label: instance
-      - target_label: __address__
-        replacement: blackbox_exporter:9115
+  # will check periodically if given URLs are up.
+  # - job_name: blackbox
+  #   scrape_interval: 15m
+  #   metrics_path: /probe
+  #   params:
+  #     module: [http_get]
+  #   static_configs:
+  #     - targets:
+  #         - https://www.up.pl/
+  #         - https://www.google.pl/
+  #         - https://www.youtube.com/
+  #   relabel_configs:
+  #     - source_labels: [__address__]
+  #       target_label: __param_target
+  #     - source_labels: [__param_target]
+  #       target_label: instance
+  #     - target_label: __address__
+  #       replacement: blackbox_exporter:9115

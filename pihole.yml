@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   pihole:
@@ -11,6 +11,8 @@ services:
         order: start-first
     depends_on:
       - traefik
+    security_opt:
+      - no-new-privileges:true
     ports:
       - "53/tcp"
       - "53/udp"
@@ -20,7 +22,7 @@ services:
       - "DNSSEC=true"
       - "DNS1=127.0.0.1"
       - "DNS2=9.9.9.9"
-      - "WEBPASSWORD=passw0rd" # access to admin panel will be covered by Traefik
+      - "WEBPASSWORD=${SWARM_PIHOLE_PASSWORD}" # access to admin panel will be covered by Traefik
     volumes:
       - piHoleConfig:/etc/pihole/
       - piHoleDnsMasq:/etc/dnsmasq.d/

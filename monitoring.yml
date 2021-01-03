@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   prometheus:
@@ -16,7 +16,7 @@ services:
       - traefik-public # only to scrape Traefik metrics as well
       - monitoring
     volumes:
-      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro,rslave
       - prometheusData:/prometheus
     command: [
       "--storage.tsdb.retention.time=3d", 

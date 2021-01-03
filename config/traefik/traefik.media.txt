@@ -1,3 +1,5 @@
+# Copy users from traefik.users.txt, so admins are treated as media users as well
+#
 # CHANGE PASSWORD BELOW AS IT'S NOT SECURE
 #
 # admin:admin

@@ -1,11 +1,15 @@
-# How to generate new cert?
-https://scriptcrunch.com/create-ca-tls-ssl-certificates-keys/
-
-# Simplest installation
+# Simplest installation using mkcert
 Install mkcert with this link: https://github.com/FiloSottile/mkcert#installation
 ```
-~/mkcert-v1.4.3-linux-amd64 --install -ecdsa -cert-file server.crt -key-file server.key "*.house.swarm"
+~/mkcert-v1.4.3-linux-amd64 --install -ecdsa -cert-file server.crt -key-file server.key "*.<url>"
 ```
+Above will generate server.crt and server.key which will be ready to use and valid for couple of years.
+You can use mkcert to locate Certificate Authority (CA) on your machine and show it to your browser, so it won't mark the URL as untrusted.
+
+# Without mkcert
+## How to generate new cert?
+https://scriptcrunch.com/create-ca-tls-ssl-certificates-keys/
+
 
 ## CA
 
@@ -59,7 +63,7 @@ sudo cp /tmp/ca.crt /etc/pki/ca-trust/source/anchors/
 sudo update-ca-trust
 ```
 
-# ... or
+### ... or
 Just call the script to trigger all of that for you:
 ```
 ./certs/generate.sh

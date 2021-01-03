@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 secrets:
   jwt:
@@ -10,7 +10,7 @@ services:
   authelia:
     image: authelia/authelia:4.21.0
     container_name: authelia
-    restart: on-failure
+    restart: unless-stopped
     secrets:
       - jwt
       - session

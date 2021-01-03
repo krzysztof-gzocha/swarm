@@ -12,11 +12,25 @@ http:
           - users
 #          - authelia # uncomment this if you are not afraid of 1GB of RAM missing..
 
+    media-secured:
+      chain:
+        middlewares:
+          - redirect-to-https
+          - security-headers
+          - media-users
+
     users:
       basicAuth:
         removeHeader: true
-        realm: HouseSwarm
+        realm: "Only admins"
         usersFile: "/configuration/dynamic/traefik.users.txt"
+
+    
+    media-users:
+      basicAuth:
+        removeHeader: true
+        realm: "Media users"
+        usersFile: "/configuration/dynamic/traefik.media.txt"
 
     redirect-to-https:
       redirectScheme:
