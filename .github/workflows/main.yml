@@ -20,3 +20,12 @@ jobs:
 
       - name: Lint PiHole
         run: docker-compose -f traefik.yml -f pihole.yml config
+
+      - name: Lint Torrent
+        run: docker-compose -f traefik.yml -f torrent.yml config
+        
+      - name: Lint Mosquitto
+        run: docker-compose -f traefik.yml -f mosquitto.yml config
+        
+      - name: Lint Authelia
+        run: docker-compose -f traefik.yml -f authelia.yml config
