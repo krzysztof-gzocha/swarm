@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+
+ owncloud:
+    image: owncloud/server:latest
+    container_name: owncloud
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 8080/tcp
+    depends_on:
+      - traefik
+      - maria
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - "TZ=${SWARM_TZ}"
+      - "OWNCLOUD_DOMAIN=owncloud.${SWARM_HOST}"
+      - OWNCLOUD_DB_TYPE=mysql
+      - "OWNCLOUD_DB_NAME=${SWARM_MARIA_DATABASE}"
+      - "OWNCLOUD_DB_USERNAME=${SWARM_MARIA_USER}"
+      - "OWNCLOUD_DB_PASSWORD=${SWARM_MARIA_PASSWORD}"
+      - OWNCLOUD_DB_HOST=maria
+      - "OWNCLOUD_ADMIN_USERNAME=${SWARM_OWNCLOUD_ADMIN}"
+      - "OWNCLOUD_ADMIN_PASSWORD=${SWARM_OWNCLOUD_ADMIN_PASSWORD}"
+      - OWNCLOUD_MYSQL_UTF8MB4=true
+      - OWNCLOUD_REDIS_ENABLED=false
+    healthcheck:
+      test: ["CMD", "/usr/bin/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - /media/veracrypt1:/mnt/data
+    networks:
+      - traefik-public
+      - database
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-owncloud.entrypoints=https"
+      - "traefik.http.routers.safe-owncloud.tls=true"
+      - "traefik.http.routers.safe-owncloud.rule=Host(`owncloud.${SWARM_HOST}`)"
+      - "traefik.http.routers.safe-owncloud.middlewares=media-secured@file"
+      - "traefik.http.routers.unsafe-owncloud.tls=false"
+      - "traefik.http.routers.unsafe-owncloud.entrypoints=http"
+      - "traefik.http.routers.unsafe-owncloud.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-owncloud.rule=Host(`owncloud.${SWARM_HOST}`)"
