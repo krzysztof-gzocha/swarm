@@ -19,6 +19,13 @@ http:
           - security-headers
           - media-users
 
+    no-login-secured:
+      chain:
+        middlewares:
+          - redirect-to-https
+          - security-headers
+          - big-rate-limit
+
     users:
       basicAuth:
         removeHeader: true
