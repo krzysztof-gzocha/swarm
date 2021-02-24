@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  piwigo:
+    image: ghcr.io/linuxserver/piwigo
+    restart: unless-stopped
+    container_name: piwigo
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - traefik
+    environment:
+      - "PUID=${SWARM_PUID}"
+      - "PGID=${SWARM_PGID}"
+      - "TZ=${SWARM_TZ}"
+    volumes:
+      - </path/to/appdata/config>:/config
+    volumes:
+      - /home/krzysiek/Pictures:/pictures
+      - /home/krzysiek/photoprism:/config
+    ports:
+      - 80/tcp
+    networks:
+      - traefik-public
+      - database
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-piwigo.entrypoints=https"
+      - "traefik.http.routers.safe-piwigo.tls=true"
+      - "traefik.http.routers.safe-piwigo.rule=Host(`photo.${SWARM_HOST}`)"
+      - "traefik.http.routers.safe-piwigo.middlewares=no-login-secured@file"
+      - "traefik.http.routers.unsafe-piwigo.tls=false"
+      - "traefik.http.routers.unsafe-piwigo.entrypoints=http"
+      - "traefik.http.routers.unsafe-piwigo.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-piwigo.rule=Host(`photo.${SWARM_HOST}`)"
