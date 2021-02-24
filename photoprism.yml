@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+
+ photoprism:
+    image: photoprism/photoprism:latest
+    container_name: photoprism
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 80/tcp
+    depends_on:
+      - traefik
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - "TZ=${SWARM_TZ}"
+      - "PHOTOPRISM_ADMIN_PASSWORD=${SWARM_PHOTOPRISM_ADMIN_PASSWORD}"
+      - PHOTOPRISM_DEBUG=false
+      - PHOTOPRISM_PUBLIC=false
+      - "PHOTOPRISM_SITE_URL=https://photo.${SWARM_HOST}"
+      - "PHOTOPRISM_DETECT_NSFW=true"
+      - "UID=${SWARM_PUID}"
+      - "GID=${SWARM_PGID}"
+      - PHOTOPRISM_HTTP_PORT=80
+    volumes:
+      - /home/krzysiek/Pictures:/photoprism/originals
+      - /home/krzysiek/photoprism:/photoprism/storage
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-photoprism.entrypoints=https"
+      - "traefik.http.routers.safe-photoprism.tls=true"
+      - "traefik.http.routers.safe-photoprism.rule=Host(`photo.${SWARM_HOST}`)"
+      - "traefik.http.routers.safe-photoprism.middlewares=no-login-secured@file"
+      - "traefik.http.routers.unsafe-photoprism.tls=false"
+      - "traefik.http.routers.unsafe-photoprism.entrypoints=http"
+      - "traefik.http.routers.unsafe-photoprism.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-photoprism.rule=Host(`photo.${SWARM_HOST}`)"
