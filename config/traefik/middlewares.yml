@@ -24,7 +24,6 @@ http:
         removeHeader: true
         realm: "Only admins"
         usersFile: "/configuration/dynamic/traefik.users.txt"
-
     
     media-users:
       basicAuth:
@@ -63,8 +62,7 @@ http:
         customResponseHeaders:
           X-Robots-Tag: "noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
 
-
-# uncomment if you would like to authenticate your users with authelio
+# uncomment if you would like to authenticate your users with authelia
 #    authelia:
 #      forwardAuth:
 #        address: "http://authelia:9091/api/verify?rd=https://login.house.swarm/"

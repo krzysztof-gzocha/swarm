@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  maria:
+    image: mariadb
+    container_name: maria
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 3306/tcp
+    environment:
+      - "TZ=${SWARM_TZ}"
+      - "MYSQL_ROOT_PASSWORD=someNotVeryGoodSecret"
+      - "MYSQL_PASSWORD=${SWARM_MARIA_PASSWORD}"
+      - "MYSQL_USER=${SWARM_MARIA_USER}"
+      - "MYSQL_DATABASE=${SWARM_MARIA_DATABASE}"
+    volumes:
+      - /home/krzysiek/swarm/db:/var/lib/mysql
+    networks:
+      - database
+    labels:
+      - "traefik.enable=true"
+
+networks:
+  database:
+    external: false

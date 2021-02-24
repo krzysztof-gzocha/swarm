@@ -56,10 +56,10 @@ services:
       - no-new-privileges:true
     ports:
       - "80/tcp"
-    deploy:
-      mode: global # exactly 1 container per swarm node
-      update_config:
-        order: start-first
+    # deploy:
+    #   mode: global # exactly 1 container per swarm node
+    #   update_config:
+    #     order: start-first
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.safe-whoami.entrypoints=https"
