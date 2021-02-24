@@ -30,7 +30,7 @@ Docker swarm setup with basic applications.
 - [ ] Add [linuxserver/duckdns](https://hub.docker.com/r/linuxserver/duckdns) in separate docker-compose.yml
 - [ ] Add [Shinobi](https://hub.docker.com/r/shinobisystems/shinobi) as video surveillance center 
 - [x] Add [Mosquitto](https://hub.docker.com/_/eclipse-mosquitto) as MQTT broker
-- [ ] Add [OwnCloud](https://hub.docker.com/_/owncloud) as file sharing center
+- [x] Add [OwnCloud](https://hub.docker.com/_/owncloud) as file sharing center
 - [x] Add [Jellyfin](https://hub.docker.com/r/jellyfin/jellyfin) as media server. Might take a lot of CPU when streaming and/or transcoding a video. Look inside jellyfin.yml for DLNA info
 - [ ] Add [OpenFaaS](https://www.openfaas.com/)
 - [x] Add Torrent related services: [Bazarr](https://github.com/morpheus65535/bazarr), [Sonarr](https://github.com/Sonarr/Sonarr), [Radarr](https://github.com/Radarr/Radarr) and [Jackett](https://github.com/Jackett/Jackett), [qBittorrent](https://hub.docker.com/r/markusmcnugen/qbittorrentvpn) with [NordVPN](https://nordvpn.com/) client
