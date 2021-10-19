@@ -1,15 +1,19 @@
-version: '3'
+version: '3.6'
+
+secrets:
+  mosquitto_admin_password:
+    file: ./config/secrets/mosquitto_admin_password
 
 services:
 
   mqtt:
     image: eclipse-mosquitto:1.6.12-openssl
-    container_name: mosquitto
+    container_name: mqtt
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     ports:
-      - 1883/tcp
+      - "1883/tcp"
     depends_on:
       - traefik
     labels:
@@ -24,6 +28,36 @@ services:
       - ./config/secrets/mosquitto_users:/mosquitto/config/users:ro,rslave
     networks:
       - traefik-public
+      - mqtt
+
+  p2m:
+    image: krzysztofgzocha/prometheus2mqtt:v0.0.8-arm
+    container_name: p2m
+    restart: unless-stopped
+    secrets:
+      - mosquitto_admin_password
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - prometheus
+      - mqtt
+    labels:
+      - "traefik.enable=false"
+    networks:
+      - monitoring
+      - mqtt
+    environment:
+      - "P2M_PROMETHEUS_URL=http://prometheus:9090"
+      - "P2M_INTERVAL=15s"
+      - "P2M_MQTT_USER=admin"
+      - "P2M_MQTT_PASSWORD_FILE=/run/secrets/mosquitto_admin_password"
+      - "P2M_MQTT_SERVERS=mqtt://mqtt:1883"
+      - "P2M_MQTT_INSECURE_SKIP_VERIFY=true"
+      - "P2M_MQTT_CLIENT_ID=p2m"
+      - "P2M_METRICS=up/traefik:up{job='traefik'},tele/temp_malina:node_hwmon_temp_celsius{sensor='temp1'}"
 
 volumes:
   mosquittoData:
+
+networks:
+  mqtt:

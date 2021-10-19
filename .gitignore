@@ -6,3 +6,4 @@ certs/*.csr
 certs/*.srl
 config/authelia/notification.txt
 config/nordvpn/credentials.conf
+.vscode

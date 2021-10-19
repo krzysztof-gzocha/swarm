@@ -1,4 +1,4 @@
-version: '3'
+version: '3.6'
 
 services:
   jackett:
@@ -126,7 +126,7 @@ services:
   torrent:
     image: markusmcnugen/qbittorrentvpn
     container_name: torrent
-    devices: 
+    devices:
       - /dev/net/tun
     cap_add:
       - NET_ADMIN
@@ -166,7 +166,7 @@ services:
 
 
 volumes:
-  jackettConfig: 
+  jackettConfig:
   radarrConfig:
   sonarrConfig:
   bazarrConfig:
