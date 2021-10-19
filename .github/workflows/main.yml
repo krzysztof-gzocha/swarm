@@ -23,9 +23,15 @@ jobs:
 
       - name: Lint Torrent
         run: docker-compose -f traefik.yml -f torrent.yml config
-        
+
       - name: Lint Mosquitto
-        run: docker-compose -f traefik.yml -f mosquitto.yml config
-        
+        run: docker-compose -f traefik.yml -f monitoring.yml -f mosquitto.yml config
+
+      - name: Lint Maria
+        run: docker-compose -f traefik.yml -f mariadb.yml config
+
+      - name: Lint OwnCloud
+        run: docker-compose -f traefik.yml -f mariadb.yml -f owncloud.yml config
+
       - name: Lint Authelia
         run: docker-compose -f traefik.yml -f authelia.yml config
