@@ -19,10 +19,15 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.tcp.services.mqtt.loadbalancer.server.port=1883"
+      - "traefik.tcp.routers.tcpr_mqtts.entrypoints=mqtts"
+      - "traefik.tcp.routers.tcpr_mqtts.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.tcpr_mqtts.service=mqtt"
+      - "traefik.tcp.routers.tcpr_mqtts.tls=true"
       - "traefik.tcp.routers.tcpr_mqtt.entrypoints=mqtt"
       - "traefik.tcp.routers.tcpr_mqtt.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.tcpr_mqtt.service=mqtt"
-      - "traefik.tcp.routers.tcpr_mqtt.tls=true"
+      - "traefik.tcp.routers.tcpr_mqtt.tls=false"
+      - "traefik.tcp.routers.tcpr_mqtt.middlewares=internal-network@file"
     volumes:
       - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro,rslave
       - ./config/secrets/mosquitto_users:/mosquitto/config/users:ro,rslave

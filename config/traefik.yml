@@ -9,8 +9,10 @@ entryPoints:
     address: ":53/tcp"
   dns53udp:
     address: ":53/udp"
-  mqtt:
+  mqtts:
     address: ":8883/tcp"
+  mqtt:
+    address: ":1883/tcp"
 
 global:
   checkNewVersion: true

@@ -3,7 +3,7 @@ version: '3.6'
 services:
 
   traefik:
-    image: traefik:v2.3
+    image: traefik:v2.5
     container_name: traefik
     restart: "unless-stopped"
     security_opt:
@@ -12,6 +12,7 @@ services:
       - "80:80/tcp"
       - "443:443/tcp"
       - "8883:8883/tcp"
+      - "1883:1883/tcp"
       - "53:53/tcp"
       - "53:53/udp"
     deploy:

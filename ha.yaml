@@ -1,0 +1,29 @@
+version: '3.6'
+
+services:
+  ha:
+    image: ghcr.io/home-assistant/raspberrypi4-homeassistant:stable
+#    image: homeassistant/home-assistant
+    container_name: ha
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "8123/tcp"
+    environment:
+      - "TZ=${SWARM_TZ}"
+    volumes:
+      - /home/krzysiek/swarm/config/ha:/config
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.safe-ha.entrypoints=https"
+      - "traefik.http.routers.safe-ha.tls=true"
+      - "traefik.http.routers.safe-ha.rule=Host(`ha.${SWARM_HOST}`)"
+      - "traefik.http.routers.safe-ha.middlewares=secured@file"
+      - "traefik.http.routers.unsafe-ha.tls=false"
+      - "traefik.http.routers.unsafe-ha.entrypoints=http"
+      - "traefik.http.routers.unsafe-ha.middlewares=redirect-to-https@file,small-rate-limit@file"
+      - "traefik.http.routers.unsafe-ha.rule=Host(`ha.${SWARM_HOST}`)"
+

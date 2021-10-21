@@ -1,3 +1,12 @@
+tcp:
+  middlewares:
+    internal-network:
+      ipWhiteList:
+        sourceRange:
+          - "127.0.0.1/24"   # localhost
+          - "192.168.0.1/16" # LAN
+          - "172.0.0.1/8"    # all docker containers
+
 http:
   middlewares:
 
@@ -31,7 +40,7 @@ http:
         removeHeader: true
         realm: "Only admins"
         usersFile: "/configuration/dynamic/traefik.users.txt"
-    
+
     media-users:
       basicAuth:
         removeHeader: true
@@ -47,8 +56,9 @@ http:
     internal-network:
       ipWhiteList:
         sourceRange:
-          - "127.0.0.1/24" # localhost
-          - "172.0.0.1/8" # all docker containers
+          - "127.0.0.1/24"   # localhost
+          - "192.168.0.1/16" # LAN
+          - "172.0.0.1/8"    # all docker containers
 
     small-rate-limit:
       rateLimit:
